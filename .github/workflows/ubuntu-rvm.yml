@@ -11,6 +11,10 @@ jobs:
       fail-fast: false
     steps:
     - uses: actions/checkout@master
+    - name: Install packages
+      run: |
+        sudo apt update -qy
+        sudo apt install libgdbm5 libgdbm-dev
     - name: Set up RVM
       run: |
         curl -sSL https://get.rvm.io | bash
