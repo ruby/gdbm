@@ -1,7 +1,5 @@
 # GDBM
 
-[![Build Status](https://travis-ci.org/ruby/gdbm.svg?branch=master)](https://travis-ci.org/ruby/gdbm)
-
 GNU dbm is a library for simple databases. A database is a file that stores
 key-value pairs. Gdbm allows the user to store, retrieve, and delete data by
 key. It furthermore allows a non-sorted traversal of all key-value pairs.
