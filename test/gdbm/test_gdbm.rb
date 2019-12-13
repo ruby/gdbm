@@ -10,6 +10,13 @@ if defined? GDBM
   require 'tmpdir'
   require 'fileutils'
 
+  # not needed in ruby/ruby, needed in ruby/gdbm
+  # skips only run in Windows as of 2019.12.13
+  unless Test::Unit::TestCase.respond_to? :skip
+    Test::Unit::TestCase.send :alias_method, :skip, :omit
+    puts GDBM::VERSION
+  end
+
   class TestGDBM_RDONLY < Test::Unit::TestCase
     def TestGDBM_RDONLY.uname_s
       require 'rbconfig'

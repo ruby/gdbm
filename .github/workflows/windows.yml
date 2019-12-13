@@ -1,0 +1,27 @@
+name: windows
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: [ '9.9.x', '2.6.x', '2.5.x', '2.4.x' ]
+    steps:
+      - uses: actions/checkout@master
+      - name: Set up Ruby
+        uses: MSP-Greg/actions-ruby@master
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          base:  update
+          mingw: gdbm
+      - name: Set up Bundler
+        run:  gem install bundler --no-document --conservative
+      - name: Install dependencies
+        run:  bundle install
+      - name: Compile
+        run:  rake compile
+      - name: Test
+        run:  rake test
