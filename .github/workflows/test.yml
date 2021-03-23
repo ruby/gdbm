@@ -1,26 +1,27 @@
-name: ubuntu
+name: test
 
 on: [push, pull_request]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  test:
+    name: test (${{ matrix.ruby }} / ${{ matrix.os }})
     strategy:
       matrix:
-        ruby: [ '2.6.x', '2.5.x', '2.4.x' ]
+        ruby: [ '3.0', 2.7, 2.6, 2.5, 2.4, head ]
+        os: [ ubuntu-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
     - name: Install packages
+      if: ${{ matrix.os == 'ubuntu-latest' }}
       run: |
         sudo apt update -qy
         sudo apt install libgdbm5 libgdbm-dev
     - name: Set up Ruby
-      uses: actions/setup-ruby@v1
+      uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
-    - name: Set up Bundler
-      run: gem install bundler --no-document
     - name: Install dependencies
       run: bundle install
     - name: Run test
-      run: rake
+      run: rake compile test
