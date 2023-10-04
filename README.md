@@ -14,7 +14,32 @@ has only read-access to the database, a writer has read- and write-access.
 A database can be accessed either by any number of readers or by exactly one
 writer at the same time.
 
+## Installing the required libraries.
+
+### On Debian/Ubuntu
+
+```
+sudo apt-get update
+sudo apt-get install libgdbm-dev
+```
+
+### On Redhat/Fedora  Yum or DNF
+```
+sudo yum install gdbm-devel
+
+sudo dnf install gdbm-devel
+```
+
+### On macOS
+```
+brew install gdbm
+```
+
 ## Installation
+
+
+
+
 
 Add this line to your application's Gemfile:
 
@@ -29,6 +54,13 @@ And then execute:
 Or install it yourself as:
 
     $ gem install gdbm
+
+
+### Install on macOS with gdbm path.
+
+```
+gem install gdbm -- --with-gdbm-dir=$(brew --prefix gdbm)
+```
 
 ## Usage
 
