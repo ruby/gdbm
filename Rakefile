@@ -1,12 +1,14 @@
 require "bundler/gem_tasks"
 require "rake/testtask"
 
-Rake::TestTask.new(:test) do |t|
-  t.libs << "test/lib"
-  t.test_files = FileList['test/**/test_*.rb']
+require 'rake/extensiontask'
+extask = Rake::ExtensionTask.new("gdbm") do |x|
+  x.lib_dir.sub!(%r[(?=/|\z)], "/#{RUBY_VERSION}/#{x.platform}")
 end
 
-require 'rake/extensiontask'
-Rake::ExtensionTask.new("gdbm")
+Rake::TestTask.new(:test) do |t|
+  t.libs = ["lib/#{RUBY_VERSION}/#{extask.platform}", "test/lib"]
+  t.test_files = FileList['test/**/test_*.rb']
+end
 
 task :default => [:compile, :test]
