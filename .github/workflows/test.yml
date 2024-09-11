@@ -39,4 +39,10 @@ jobs:
     - name: Install dependencies
       run: bundle install
     - name: Run test
+      if: ${{ matrix.os == 'ubuntu-latest' }}
       run: rake compile test
+    - name: Run test
+      if: ${{ matrix.os == 'macos-latest' }}
+      run: |
+        rake compile -- --with-opt-dir=$(brew --prefix gdbm)
+        rake test
