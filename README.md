@@ -19,27 +19,36 @@ writer at the same time.
 ### On Debian/Ubuntu
 
 ```
-sudo apt-get update
-sudo apt-get install libgdbm-dev
+sudo apt install libgdbm-dev
 ```
 
-### On Redhat/Fedora  Yum or DNF
-```
-sudo yum install gdbm-devel
+### On Redhat/Fedora
 
+```
 sudo dnf install gdbm-devel
 ```
 
+or if you are using an older version of Redhat or Fedora that uses Yum:
+
+```
+sudo yum install gdbm-devel
+```
+
 ### On macOS
+
+If you are using Homebrew, you can install gdbm with the following command:
+
 ```
 brew install gdbm
 ```
 
+or if you are using MacPorts, you can install gdbm with:
+
+```
+sudo port install gdbm
+```
+
 ## Installation
-
-
-
-
 
 Add this line to your application's Gemfile:
 
