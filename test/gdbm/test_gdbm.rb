@@ -11,18 +11,6 @@ if defined? GDBM
   require 'fileutils'
 
   class TestGDBM_RDONLY < Test::Unit::TestCase
-    def TestGDBM_RDONLY.uname_s
-      require 'rbconfig'
-      case RbConfig::CONFIG['target_os']
-      when 'cygwin'
-        require 'etc'
-	Etc.uname[:sysname]
-      else
-        RbConfig::CONFIG['target_os']
-      end
-    end
-    SYSTEM = uname_s
-
     def setup
       @tmpdir = Dir.mktmpdir("tmptest_gdbm")
       @prefix = "tmptest_gdbm_#{$$}"
@@ -34,6 +22,7 @@ if defined? GDBM
       }
       assert_instance_of(GDBM, @gdbm_rdonly = GDBM.new("#{@tmpdir}/#{@prefix}_rdonly", nil))
     end
+
     def teardown
       assert_nil(@gdbm_rdonly.close)
       ObjectSpace.each_object(GDBM) do |obj|
@@ -45,19 +34,15 @@ if defined? GDBM
     def test_delete_rdonly
       skip("skipped because root can open anything") if Process.uid == 0
 
-      if /^CYGWIN_9/ !~ SYSTEM
-        assert_raise(GDBMError) {
-          @gdbm_rdonly.delete("foo")
-        }
+      assert_raise(GDBMError) {
+        @gdbm_rdonly.delete("foo")
+      }
 
-        assert_nil(@gdbm_rdonly.delete("bar"))
-      end
+      assert_nil(@gdbm_rdonly.delete("bar"))
     end
   end
 
   class TestGDBM < Test::Unit::TestCase
-    SYSTEM = TestGDBM_RDONLY::SYSTEM
-
     def setup
       @tmpdir = Dir.mktmpdir("tmptest_gdbm")
       @prefix = "tmptest_gdbm_#{$$}"
@@ -98,9 +83,8 @@ if defined? GDBM
       assert_equal(foo, true)
       assert_nil(gdbm.close)
     end
-    def test_s_open_create_new
-      return if /^CYGWIN_9/ =~ SYSTEM
 
+    def test_s_open_create_new
       save_mask = File.umask(0)
       begin
         assert_instance_of(GDBM, gdbm = GDBM.open("#{@tmpdir}/#{@prefix}"))
@@ -113,12 +97,14 @@ if defined? GDBM
         File.umask save_mask
       end
     end
+
     def test_s_open_no_create
       skip "gdbm_open(GDBM_WRITER) is broken on libgdbm 1.8.0" if /1\.8\.0/ =~ GDBM::VERSION
       assert_nil(gdbm = GDBM.open("#{@tmpdir}/#{@prefix}", nil))
     ensure
       gdbm.close if gdbm
     end
+
     def test_s_open_3rd_arg
       assert_instance_of(GDBM, gdbm = GDBM.open("#{@tmpdir}/#{@prefix}", 0644,
                                                 GDBM::FAST))
@@ -137,6 +123,7 @@ if defined? GDBM
         gdbm.close
       end
     end
+
     def test_s_open_with_block
       assert_equal(GDBM.open("#{@tmpdir}/#{@prefix}") { :foo }, :foo)
     end
